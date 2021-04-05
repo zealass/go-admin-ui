@@ -82,7 +82,7 @@
 
         <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="参数主键" width="80" align="center" prop="ID" />
+          <el-table-column label="参数主键" width="80" align="center" prop="id" />
           <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true" />
           <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true" />
           <el-table-column label="参数键值" align="center" prop="configValue" />
@@ -142,6 +142,12 @@
                 >{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
+            <el-form-item label="是否前台显示" prop="isFrontend">
+              <el-select v-model="form.isFrontend" placeholder="是否前台显示" clearable size="small">
+                <el-option label="是" value="1" />
+                <el-option label="否" value="2" />
+              </el-select>
+            </el-form-item>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
             </el-form-item>
@@ -197,15 +203,10 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        configName: [
-          { required: true, message: '参数名称不能为空', trigger: 'blur' }
-        ],
-        configKey: [
-          { required: true, message: '参数键名不能为空', trigger: 'blur' }
-        ],
-        configValue: [
-          { required: true, message: '参数键值不能为空', trigger: 'blur' }
-        ]
+        configName: [{ required: true, message: '参数名称不能为空', trigger: 'blur' }],
+        configKey: [{ required: true, message: '参数键名不能为空', trigger: 'blur' }],
+        configValue: [{ required: true, message: '参数键值不能为空', trigger: 'blur' }],
+        isFrontend: [{ required: true, message: '是否前台显示不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -238,11 +239,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        ID: undefined,
+        id: undefined,
         configName: undefined,
         configKey: undefined,
         configValue: undefined,
         configType: 'Y',
+        isFrontend: 1,
         remark: undefined
       }
       this.resetForm('form')
@@ -267,16 +269,17 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.ID)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const ID = row.ID || this.ids
+      const ID = row.id || this.ids
       getConfig(ID).then(response => {
         this.form = response.data
+        this.form.isFrontend = String(this.form.isFrontend)
         this.open = true
         this.title = '修改参数'
         this.isEdit = true
@@ -286,7 +289,8 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.ID !== undefined) {
+          this.form.isFrontend = parseInt(this.form.isFrontend)
+          if (this.form.id !== undefined) {
             updateConfig(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess('修改成功')
@@ -312,7 +316,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const configIds = row.ID || this.ids
+      const configIds = row.id || this.ids
       this.$confirm('是否确认删除参数编号为"' + configIds + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

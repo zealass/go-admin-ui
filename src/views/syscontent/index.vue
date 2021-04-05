@@ -184,14 +184,6 @@ export default {
         cateId: undefined,
         name: undefined,
         status: undefined
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        cateId: [{ required: true, message: '分类id不能为空', trigger: 'blur' }],
-        name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -227,7 +219,7 @@ export default {
     // 关系
     getSysCategoryItems() {
       this.getItems(listSysCategory, undefined).then(res => {
-        this.cateIdOptions = this.setItems(res, 'ID', 'name')
+        this.cateIdOptions = this.setItems(res, 'id', 'name')
       })
     },
     /** 搜索按钮操作 */
@@ -258,7 +250,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const Ids = row.id || this.ids
+      // const Ids = row.id || this.ids
+      const Ids = (row.id && [row.id]) || this.ids
       this.$confirm('是否确认删除编号为"' + Ids + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
