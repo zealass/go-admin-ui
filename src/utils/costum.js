@@ -4,6 +4,9 @@ export function parseTime(time, pattern) {
   if (arguments.length === 0 || !time) {
     return null
   }
+  if (time.indexOf('01-01-01') > -1) {
+    return '-'
+  }
   const format = pattern || '{y}-{m}-{d} {h}:{i}:{s}'
   let date
   if (typeof time === 'object') {
@@ -61,8 +64,8 @@ export function addDateRange(params, dateRange) {
 export function selectDictLabel(datas, value) {
   var actions = []
   Object.keys(datas).map((key) => {
-    if (datas[key].dictValue === ('' + value)) {
-      actions.push(datas[key].dictLabel)
+    if (datas[key].value === ('' + value)) {
+      actions.push(datas[key].label)
       return false
     }
   })

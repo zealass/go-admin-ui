@@ -201,10 +201,8 @@ export default {
       window.tinymce.get(this.tinymceId).getContent()
     },
     imageSuccessCBK(arr) {
-      debugger
       const _this = this
       arr.forEach(v => {
-        console.log(v)
         window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" width="100%" src="${v.fullUrl}" >`)
       })
     }
@@ -214,7 +212,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.tinymce-container /deep/{
+.tinymce-container ::v-deep{
   position: relative;
   line-height: normal;
   width: 100%;
