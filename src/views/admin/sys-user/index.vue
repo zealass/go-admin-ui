@@ -182,7 +182,7 @@
         </el-row>
       </el-card>
       <!-- 添加或修改参数配置对话框 -->
-      <el-dialog :title="title" :visible.sync="open" width="600px">
+      <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-row>
             <el-col :span="12">
@@ -282,7 +282,7 @@
         </div>
       </el-dialog>
       <!-- 用户导入对话框 -->
-      <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+      <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" :close-on-click-modal="false">
         <el-upload
           ref="upload"
           :limit="1"
@@ -582,7 +582,7 @@ export default {
       }).then(({ value }) => {
         resetUserPwd(row.userId, value).then(response => {
           if (response.code === 200) {
-            this.msgSuccess('修改成功，新密码是：' + value)
+            this.msgSuccess(response.msg)
           } else {
             this.msgError(response.msg)
           }
